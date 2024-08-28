@@ -13,7 +13,7 @@ func AuthMiddleware() fiber.Handler {
 	return func(c fiber.Ctx) error {
 		db := database.ConnectToDb()
 		defer db.Close()
-		accessTokenStr := c.Cookies("goauth:access_token")
+		accessTokenStr := c.Cookies("@app:access_token")
 
 		if accessTokenStr == "" {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
