@@ -2,18 +2,18 @@ package createaccountcontroller
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/henrique998/go-auth-2/internal/app/request"
+	"github.com/henrique998/go-auth-2/internal/app/requests"
 )
 
 func (cc *createAccountController) Handle(c fiber.Ctx) error {
-	req := request.CreateAccountRequest{
+	req := requests.CreateAccountRequest{
 		Name:  "jhon doe",
 		Email: "jhondoe@gmail.com",
 		Pass:  "123456",
 		Phone: "999999999",
 	}
 
-	cc.uc.Execute(req)
+	cc.us.Execute(req)
 
 	return nil
 }

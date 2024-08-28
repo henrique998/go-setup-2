@@ -1,17 +1,6 @@
-package entities
+package models
 
 import "time"
-
-type account struct {
-	id        string
-	name      string
-	email     string
-	pass      *string
-	phone     *string
-	age       int8
-	createdAt time.Time
-	updatedAt *time.Time
-}
 
 type Account interface {
 	GetID() string
@@ -25,8 +14,18 @@ type Account interface {
 	Touch()
 }
 
-func (u *account) GetID() string {
-	return u.id
+type account struct {
+	model
+	name      string
+	email     string
+	pass      *string
+	phone     *string
+	age       int8
+	updatedAt *time.Time
+}
+
+func (m *account) GetID() string {
+	return m.id
 }
 
 func (u *account) GetName() string {
@@ -78,26 +77,30 @@ func NewAccount(name, email, pass, phone string, age int8) Account {
 	}
 
 	return &account{
-		id:        generateUUID(),
+		model: model{
+			id:        generateUUID(),
+			createdAt: time.Now(),
+		},
 		name:      name,
 		email:     email,
 		pass:      passVal,
 		phone:     phoneVal,
 		age:       age,
-		createdAt: time.Now(),
 		updatedAt: nil,
 	}
 }
 
 func NewExistingAccount(id, name, email, pass, phone string, age int8, createdAt, updatedAt time.Time) Account {
 	return &account{
-		id:        id,
+		model: model{
+			id:        id,
+			createdAt: createdAt,
+		},
 		name:      name,
 		email:     email,
 		pass:      &pass,
 		phone:     &phone,
 		age:       age,
-		createdAt: time.Now(),
 		updatedAt: &updatedAt,
 	}
 }
