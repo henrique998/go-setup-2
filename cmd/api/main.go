@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/limiter"
 	"github.com/henrique998/go-auth-2/internal/configs/logger"
+	"github.com/henrique998/go-auth-2/internal/infra/database"
 	"github.com/henrique998/go-auth-2/internal/infra/endpoints"
 	"github.com/joho/godotenv"
 )
@@ -16,6 +20,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	conn, err := database.Connect()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
 
 	app := fiber.New()
 
@@ -29,6 +40,6 @@ func main() {
 		},
 	}))
 
-	endpoints.SetupEndpoints(app)
+	endpoints.SetupEndpoints(app, conn)
 	logger.Error("Project startup", app.Listen(":3333"))
 }

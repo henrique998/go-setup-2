@@ -4,15 +4,12 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/henrique998/go-auth-2/internal/infra/database"
 	"github.com/henrique998/go-auth-2/internal/infra/database/repositories"
 	"github.com/henrique998/go-auth-2/internal/infra/utils"
 )
 
-func AuthMiddleware() fiber.Handler {
+func AuthMiddleware(repo repositories.PGAccountsRepository) fiber.Handler {
 	return func(c fiber.Ctx) error {
-		db := database.ConnectToDb()
-		defer db.Close()
 		accessTokenStr := c.Cookies("@app:access_token")
 
 		if accessTokenStr == "" {
@@ -26,10 +23,6 @@ func AuthMiddleware() fiber.Handler {
 			return c.JSON(fiber.Map{
 				"error": err.GetMessage(),
 			})
-		}
-
-		repo := repositories.PGAccountsRepository{
-			Db: db,
 		}
 
 		account := repo.FindById(accountId)

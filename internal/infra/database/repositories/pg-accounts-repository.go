@@ -1,20 +1,19 @@
 package repositories
 
 import (
-	"database/sql"
-
 	"github.com/henrique998/go-auth-2/internal/app/models"
+	"github.com/jackc/pgx/v5"
 )
 
 type PGAccountsRepository struct {
-	Db *sql.DB
+	Db *pgx.Conn
 }
 
-func (r *PGAccountsRepository) FindById(accountId string) *models.Account {
+func (r *PGAccountsRepository) FindById(accountId string) models.Account {
 	return nil
 }
 
-func (r *PGAccountsRepository) FindByEmail(email string) *models.Account {
+func (r *PGAccountsRepository) FindByEmail(email string) models.Account {
 	return nil
 }
 

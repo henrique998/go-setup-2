@@ -1,37 +1,18 @@
 package database
 
 import (
-	"database/sql"
-	"fmt"
+	"context"
 	"os"
 
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgx/v5"
 )
 
-func ConnectToDb() *sql.DB {
-	var (
-		driver   = os.Getenv("DB_DRIVER")
-		user     = os.Getenv("DB_USER")
-		pass     = os.Getenv("DB_PASS")
-		host     = os.Getenv("DB_HOST")
-		port     = os.Getenv("DB_PORT")
-		database = os.Getenv("DB_NAME")
-	)
+func Connect() (conn *pgx.Conn, err error) {
+	conn, err = pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 
-	connStr := fmt.Sprintf(
-		"user=%s password=%s host=%s port=%s dbname=%s sslmode=disable",
-		user, pass, host, port, database,
-	)
-
-	db, err := sql.Open(driver, connStr)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
-
-	return db
+	return
 }
